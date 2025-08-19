@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>คำนวณ BMI (เกณฑ์ไทย)</title>
+  <meta name="description" content="คำนวณดัชนีมวลกายตามเกณฑ์ไทย พร้อมตารางช่วงค่า BMI">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="logo">💙</div>
+      <div>
+        <h1>คำนวณ BMI</h1>
+        <p>เกณฑ์ไทย: &lt;18.5, 18.5–22.9, 23–24.9, 25–29.9, ≥30</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrapper">
+    <section class="card">
+      <h2 class="card-title">กรอกข้อมูล</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="w">น้ำหนัก (กิโลกรัม)</label>
+          <input id="w" type="number" inputmode="numeric" placeholder="เช่น 65">
+        </div>
+        <div class="field">
+          <label for="h">ส่วนสูง (เซนติเมตร)</label>
+          <input id="h" type="number" inputmode="numeric" placeholder="เช่น 170">
+        </div>
+      </div>
+      <button id="go" class="btn">คำนวณ BMI</button>
+
+      <div id="result" class="result hidden">
+        <div class="result-line">
+          <span class="result-label">BMI</span>
+          <span class="result-value" id="bmi-value">—</span>
+        </div>
+        <div class="chip" id="status-chip">สถานะ</div>
+        <p class="advice" id="advice"></p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">เกณฑ์ BMI สำหรับคนไทย</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ช่วงค่า BMI</th><th>ความหมาย</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>&lt; 18.5</td><td>ต่ำกว่าเกณฑ์</td></tr>
+            <tr><td>18.5 – 22.9</td><td>ปกติสมส่วน</td></tr>
+            <tr><td>23.0 – 24.9</td><td>น้ำหนักเกิน</td></tr>
+            <tr><td>25.0 – 29.9</td><td>อ้วนระดับ 1</td></tr>
+            <tr><td>≥ 30.0</td><td>อ้วนระดับ 2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>v1.4 • อัปเดต 2025-08-19</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
