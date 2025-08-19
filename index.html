@@ -1,11 +1,52 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>คำนวณ BMI (เกณฑ์ไทย)</title>
   <meta name="description" content="คำนวณดัชนีมวลกายตามเกณฑ์ไทย พร้อมตารางช่วงค่า BMI">
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root{
+      --bg:#0b1220; --muted:#9aa4b2; --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#0b1220 0%, #0e1324 30%, #0b1220 100%); color:#e5e7eb;}
+    .hero{padding:28px 16px 24px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .hero-inner{max-width:960px;margin:0 auto;display:flex;gap:16px;align-items:center}
+    .logo{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;
+      background:radial-gradient(120px 60px at 20% -30%, #60a5fa 0%, transparent 60%),
+                 linear-gradient(160deg,#0ea5e9 0%, #2563eb 100%); box-shadow:var(--shadow); font-size:26px}
+    .hero h1{margin:0;font-size:28px;letter-spacing:.3px}
+    .hero p{margin:4px 0 0;color:var(--muted)}
+    .wrapper{max-width:960px;margin:24px auto;padding:0 16px;display:grid;gap:20px;grid-template-columns:1fr}
+    @media (min-width:860px){.wrapper{grid-template-columns:1fr 1fr}}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+    .card-title{margin:0 0 12px;font-size:18px;color:#fff}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media (min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+    .field label{display:block;font-weight:600;margin:2px 0 6px;color:#e2e8f0}
+    .field input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(2,6,23,.6);color:#fff;outline:none}
+    .field input:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.25)}
+    .btn{width:100%;margin-top:10px;padding:14px;border:0;border-radius:12px;
+      background:linear-gradient(160deg,#2563eb,#0ea5e9);color:white;font-weight:800;letter-spacing:.2px;cursor:pointer}
+    .result{margin-top:14px;padding:14px;border:1px dashed rgba(255,255,255,.12);border-radius:12px}
+    .hidden{display:none}
+    .result-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .result-label{color:var(--muted);font-weight:600}
+    .result-value{font-size:26px;font-weight:900}
+    .chip{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;background:#334155;color:#e2e8f0;margin-right:6px}
+    .chip.low{background:#1d4ed845}.chip.normal{background:#16a34a45}.chip.over{background:#f59e0b45}
+    .chip.ob1{background:#f9731645}.chip.ob2{background:#ef444445}
+    .table-wrap{overflow:auto;border-radius:12px;border:1px solid rgba(255,255,255,.08)}
+    table{width:100%;border-collapse:collapse;background:rgba(2,6,23,.4)}
+    th,td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06)}
+    thead th{background:rgba(255,255,255,.06);font-weight:800}
+    tbody tr:hover{background:rgba(255,255,255,.04)}
+    .footer{padding:16px;text-align:center;color:#9aa4b2}
+  </style>
 </head>
 <body>
   <header class="hero">
@@ -39,7 +80,7 @@
           <span class="result-value" id="bmi-value">—</span>
         </div>
         <div class="chip" id="status-chip">สถานะ</div>
-        <p class="advice" id="advice"></p>
+        <p class="advice" id="advice" style="margin:8px 0 0;color:#e2e8f0"></p>
       </div>
     </section>
 
@@ -47,9 +88,7 @@
       <h2 class="card-title">เกณฑ์ BMI สำหรับคนไทย</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>ช่วงค่า BMI</th><th>ความหมาย</th></tr>
-          </thead>
+          <thead><tr><th>ช่วงค่า BMI</th><th>ความหมาย</th></tr></thead>
           <tbody>
             <tr><td>&lt; 18.5</td><td>ต่ำกว่าเกณฑ์</td></tr>
             <tr><td>18.5 – 22.9</td><td>ปกติสมส่วน</td></tr>
@@ -62,10 +101,46 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <small>v1.4 • อัปเดต 2025-08-19</small>
-  </footer>
+  <footer class="footer"><small>v1.4</small></footer>
 
-  <script src="script.js"></script>
+  <script>
+    function classifyTH(bmi){
+      if (bmi < 18.5) return {label:"ต่ำกว่าเกณฑ์",  cls:"low"};
+      if (bmi < 23)   return {label:"ปกติสมส่วน",   cls:"normal"};
+      if (bmi < 25)   return {label:"น้ำหนักเกิน",  cls:"over"};
+      if (bmi < 30)   return {label:"อ้วนระดับ 1",  cls:"ob1"};
+      return {label:"อ้วนระดับ 2", cls:"ob2"};
+    }
+    function advice(label){
+      switch(label){
+        case "ต่ำกว่าเกณฑ์": return "เพิ่มพลังงาน/โปรตีนอย่างเหมาะสม พร้อมฝึกเวทเสริมกล้ามเนื้อ";
+        case "ปกติสมส่วน":   return "ดีมาก! รักษาน้ำหนัก ออกกำลังกายสม่ำเสมอ เลือกอาหารสมดุล";
+        case "น้ำหนักเกิน":  return "ลดหวานมันเค็ม เพิ่มผักผลไม้ และขยับให้มากขึ้น";
+        case "อ้วนระดับ 1":  return "คุมอาหาร+ออกกำลังกายจริงจัง อาจปรึกษาแพทย์/นักโภชนาการ";
+        case "อ้วนระดับ 2":  return "ความเสี่ยงสูง แนะนำพบแพทย์เพื่อวางแผนลดน้ำหนักอย่างปลอดภัย";
+        default: return "";
+      }
+    }
+    document.getElementById('go').addEventListener('click', ()=>{
+      const w = parseFloat(document.getElementById('w').value);
+      const h = parseFloat(document.getElementById('h').value)/100;
+      const result = document.getElementById('result');
+      const bmiEl = document.getElementById('bmi-value');
+      const chip = document.getElementById('status-chip');
+      const adv = document.getElementById('advice');
+
+      if(!w || !h){
+        result.classList.remove('hidden'); bmiEl.textContent='—';
+        chip.className='chip'; chip.textContent='กรอกข้อมูลให้ครบ'; adv.textContent=''; return;
+      }
+      const bmi = +(w/(h*h)).toFixed(2);
+      const {label, cls} = classifyTH(bmi);
+      result.classList.remove('hidden');
+      bmiEl.textContent = bmi;
+      chip.className = 'chip ' + cls;
+      chip.textContent = label;
+      adv.textContent = advice(label);
+    });
+  </script>
 </body>
 </html>
